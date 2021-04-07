@@ -7,6 +7,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.msc.dogsapplication.R
 import com.msc.dogsapplication.model.DogBreed
+import com.msc.dogsapplication.util.getProgressDrawable
+import com.msc.dogsapplication.util.loadImage
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_dog_list.view.*
 
@@ -35,6 +37,10 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
         val dog = dogsList[position]
         holder.view.tv_name.text = dog.dogBreed
         holder.view.tv_desc.text = dog.lifespan
+        holder.view.image_view.loadImage(
+            dog.imageUrl,
+            getProgressDrawable(holder.view.image_view.context)
+        )
 
         holder.view.setOnClickListener {
             val action = ListFragmentDirections.actionDetailFragment()
