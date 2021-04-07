@@ -3,23 +3,50 @@ package com.msc.dogsapplication.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.msc.dogsapplication.model.DogBreed
+import com.msc.dogsapplication.model.DogsApiService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 class ListViewModel : ViewModel() {
+
+    private val disposable = CompositeDisposable()
+    private val dogsService = DogsApiService()
+
     val dogs = MutableLiveData<List<DogBreed>>()
     val dogsLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
     fun refresh() {
-        val dog1 = DogBreed("1", "Labrador", "2 years", "breadGroup", "breedFor", "temperament", "")
-        val dog2 = DogBreed("2", "Golden", "6 years", "breadGroup", "breedFor", "temperament", "")
-        val dog3 = DogBreed("3", "Shih tzu", "1 year", "breadGroup", "breedFor", "temperament", "")
-        val dog4 = DogBreed("4", "Rotweiler", "4 years", "breadGroup", "breedFor", "temperament", "")
-        val dog5 = DogBreed("5", "Corgi", "15 years", "breadGroup", "breedFor", "temperament", "")
+        fetchFromRemote()
+    }
 
-        val dogList = arrayListOf(dog1, dog2, dog3, dog4, dog5)
+    private fun fetchFromRemote() {
+        loading.value = true
 
-        dogs.value = dogList
-        dogsLoadError.value = false
-        loading.value = false
+        disposable.add(
+            dogsService.getDogs().subscribeOn(Schedulers.newThread()).observeOn(
+                AndroidSchedulers.mainThread()
+            ).subscribeWith(object : DisposableSingleObserver<List<DogBreed>>() {
+                override fun onSuccess(dogList: List<DogBreed>) {
+                    loading.value = false
+                    dogsLoadError.value = false
+                    dogs.value = dogList
+                }
+
+                override fun onError(e: Throwable) {
+                    loading.value = false
+                    dogsLoadError.value = true
+                    e.printStackTrace()
+                }
+
+            })
+        )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
     }
 }

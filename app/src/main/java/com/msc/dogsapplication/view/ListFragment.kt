@@ -39,7 +39,17 @@ class ListFragment : Fragment() {
         }
 
         viewModel.refresh()
+
+        refresh_layout.setOnRefreshListener {
+            rv_dogs_list.visibility = View.GONE
+            tv_error.visibility = View.GONE
+            progress.visibility = View.VISIBLE
+            viewModel.refresh()
+            refresh_layout.isRefreshing = false
+        }
+
         observeViewModel()
+
     }
 
     private fun observeViewModel() {
@@ -55,7 +65,7 @@ class ListFragment : Fragment() {
         viewModel.dogsLoadError.observe(viewLifecycleOwner, Observer { isError ->
             isError.let {
                 tv_error.visibility = if (it) View.VISIBLE else View.GONE
-                if(it) {
+                if (it) {
                     rv_dogs_list.visibility = View.GONE
                     progress.visibility = View.GONE
                 }
