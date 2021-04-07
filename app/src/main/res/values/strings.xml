@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DogsApplication</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Created by Márcia Silveiro Coutinho</string>
+    <string name="an_error_ocurred">An error ocurred while loading</string>
+</resources>
