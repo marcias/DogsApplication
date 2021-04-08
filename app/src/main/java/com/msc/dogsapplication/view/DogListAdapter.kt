@@ -3,17 +3,16 @@ package com.msc.dogsapplication.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.msc.dogsapplication.R
+import com.msc.dogsapplication.databinding.ItemDogListBinding
 import com.msc.dogsapplication.model.DogBreed
-import com.msc.dogsapplication.util.getProgressDrawable
-import com.msc.dogsapplication.util.loadImage
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_dog_list.view.*
 
-class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
-    RecyclerView.Adapter<DogListAdapter.DogViewHolder>() {
+class DogListAdapter(private val dogsList: ArrayList<DogBreed>) :
+    RecyclerView.Adapter<DogListAdapter.DogViewHolder>(), DogClickListener {
 
     fun updateList(dogLisUpdated: List<DogBreed>) {
         dogsList.clear()
@@ -21,12 +20,16 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
         notifyDataSetChanged()
     }
 
-    class DogViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
-    }
+    class DogViewHolder(var view: ItemDogListBinding) : RecyclerView.ViewHolder(view.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_dog_list, parent, false)
+        val view = DataBindingUtil.inflate<ItemDogListBinding>(
+            inflater,
+            R.layout.item_dog_list,
+            parent,
+            false
+        )
         return DogViewHolder(view)
 
     }
@@ -34,18 +37,13 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
     override fun getItemCount(): Int = dogsList.size
 
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
-        val dog = dogsList[position]
-        holder.view.tv_name.text = dog.dogBreed
-        holder.view.tv_desc.text = dog.lifespan
-        holder.view.image_view.loadImage(
-            dog.imageUrl,
-            getProgressDrawable(holder.view.image_view.context)
-        )
+        holder.view.dog = dogsList[position]
+        holder.view.listener = this
+    }
 
-        holder.view.setOnClickListener {
-            val action = ListFragmentDirections.actionDetailFragment()
-            action.dogUuid = dog.uuid
-            Navigation.findNavController(it).navigate(action)
-        }
+    override fun onDogClicked(v: View) {
+        val action = ListFragmentDirections.actionDetailFragment()
+        action.dogUuid = v.dogId.text.toString().toInt()
+        Navigation.findNavController(v).navigate(action)
     }
 }

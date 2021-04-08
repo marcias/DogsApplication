@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.msc.dogsapplication.R
+import com.msc.dogsapplication.databinding.FragmentDetailBinding
+import com.msc.dogsapplication.databinding.ItemDogListBinding
 import com.msc.dogsapplication.util.getProgressDrawable
 import com.msc.dogsapplication.util.loadImage
 import com.msc.dogsapplication.viewmodel.DetailViewModel
@@ -18,13 +21,20 @@ class DetailFragment : Fragment() {
 
     private var dogUuid = 0
     private val viewModel: DetailViewModel by activityViewModels()
+    private lateinit var dataBinding: FragmentDetailBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        dataBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_detail,
+            container,
+            false
+        )
+        return dataBinding.root;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,10 +49,7 @@ class DetailFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.dog.observe(viewLifecycleOwner, Observer { dog ->
             dog.let {
-                tv_dog_name.text = dog.dogBreed
-                tv_dog_life_span.text = dog.lifespan
-                tv_dog_temperament.text = dog.temperament
-                iv_dog.loadImage(dog.imageUrl, getProgressDrawable(iv_dog.context))
+                dataBinding.dog = dog
             }
         })
 
