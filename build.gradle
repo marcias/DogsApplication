@@ -7,6 +7,7 @@ buildscript {
     ext.glide_version = "4.12.0"
     ext.room_version = "2.2.6"
     ext.preferences_version = "1.1.1"
+    ext.palette_version = "28.0.0"
 
     repositories {
         google()

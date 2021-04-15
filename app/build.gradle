@@ -59,7 +59,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxJava_version"
-""
+    ""
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
@@ -68,6 +68,8 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
 
     implementation "androidx.preference:preference:$preferences_version"
+
+    implementation "com.android.support:palette-v7:$palette_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
