@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Created by Márcia Silveiro Coutinho</string>
     <string name="an_error_ocurred">An error ocurred while loading</string>
+    <string name="dogs_retrieved"> Dogs Retrieved</string>
+    <string name="come_see_dogs">Hello, come to see the dogs! They\'re so cute!</string>
 </resources>
